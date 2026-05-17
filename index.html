@@ -11,7 +11,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <body>
 <header>
 <h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
-<p class="muted">用 <code>CR0040_HaplotypeA</code> RNA-seq featureCounts 結果重新篩選 rostellum 發育與 MADS-box 調控相關候選基因。報告日期：2026-05-17。</p>
+<p class="muted">用公共定序檔案重新 mapping 到 <code>CR0040_HaplotypeA</code> 後的 featureCounts 結果，篩選 rostellum 發育與 MADS-box 調控相關候選基因。報告日期：2026-05-17。</p>
 </header>
 <main>
 <section>
@@ -20,10 +20,10 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <div class="metric"><div class="value">38</div><div class="label">納入分析的 RNA-seq samples</div></div>
 <div class="metric"><div class="value">26,392</div><div class="label">CR0040A genes ranked</div></div>
 <div class="metric"><div class="value">50</div><div class="label">qPCR shortlist genes</div></div>
-<div class="metric"><div class="value">CR0040A-only</div><div class="label">主分析基因組版本</div></div>
+<div class="metric"><div class="value">CR0040A-only</div><div class="label">只使用我們 mapping 後的結果</div></div>
 </div>
-<p>這份分析以使用者自己的 <code>CR0040_HaplotypeA</code> counts 為主，不把文章使用的 <code>GCA_016413885.1 / Elo_Vpla-B_alternate_1.0</code> 座標當成主要證據。文章 HPP92/KAG 對應與 WGCNA module 只作為輔助註解。</p>
-<div class="note"><strong>主要結論：</strong>第一波應優先驗證 LOB domain genes、subtilisin/CDR1-like protease、SWEET/MST sugar transport genes，以及 cell-wall remodeling genes。這些基因同時具有 rostellum-stage enrichment、S3/S4 GR &gt; G、MADS-like co-expression 或 promoter CArG motif 支持。</div>
+<p>本階段只使用公共定序檔案，將 reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，以我們自己的 featureCounts 結果進行候選基因篩選。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入本階段 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。</p>
+<div class="note"><strong>主要結論：</strong>第一波應優先驗證 LOB domain genes、subtilisin/CDR1-like protease、SWEET/MST sugar transport genes，以及 cell-wall remodeling genes。這些候選來自我們自己的 mapping/counts、CR0040A 註解、local MADS-like co-expression 與 promoter CArG motif。</div>
 </section>
 <section>
 <h2>Data And QC</h2>
@@ -38,12 +38,13 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <li><strong>BGR/B support：</strong>用 BGR vs B 補充判斷 rostellum-related tissue signal。</li>
 <li><strong>MADS-like co-expression：</strong>用 CR0040A 本地註解中的 MADS-like genes 作為 bait，計算候選基因相關性。</li>
 <li><strong>Promoter CArG motif：</strong>掃描上游 2 kb CArG-like motif，作為可能被 MADS-box 直接調控的弱證據。</li>
-<li><strong>Cross-reference：</strong>用 BLASTP crosswalk 連到文章 HPP92/KAG ID 與 WGCNA module。</li>
+<li><strong>Hold-out comparison：</strong>文章結果先保留不用於 ranking，等本分析完成後再做外部比較。</li>
 </ol>
 <p>注意：目前是候選基因 prioritization，不是正式 DESeq2/edgeR 差異表現統計。</p>
 </section>
 <section>
 <h2>Local CR0040A MADS-like Bait Genes</h2>
+<p>以下 bait genes 由 CR0040A 註解與我們自己的 expression matrix 中篩出，不使用文章的 ID 或 module。</p>
 <div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Annotation</th></tr></thead><tbody>
 <tr><td><code>VANPL_A_00001t031260</code></td><td class="num">2.31</td><td>putative MADS-box protein SVP</td></tr>
 <tr><td><code>VANPL_A_00001t004780</code></td><td class="num">1.98</td><td>Floral homeotic protein AGAMOUS</td></tr>
@@ -53,32 +54,31 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <tr><td><code>VANPL_A_00009t012690</code></td><td class="num">1.32</td><td>putative Agamous-like MADS-box protein AGL11</td></tr>
 <tr><td><code>VANPL_A_00012t007660</code></td><td class="num">1.26</td><td>putative MADS-box transcription factor 32</td></tr>
 <tr><td><code>VANPL_A_00004t007990</code></td><td class="num">1.12</td><td>MADS-box transcription factor 26</td></tr>
-<tr><td><code>VANPL_A_00011t007840</code></td><td class="num">1.03</td><td>MADS-box protein-like protein</td></tr>
-<tr><td><code>VANPL_A_00014t003960</code></td><td class="num">0.73</td><td>Agamous-like MADS-box protein MADS3</td></tr>
 </tbody></table></div>
 </section>
 <section>
 <h2>Top qPCR Candidate Genes</h2>
-<p><code>S3 GR/G</code> 與 <code>S4 GR/G</code> 為 log2 fold change；<code>MADS corr</code> 為與本地 MADS-like bait 的最高相關性；<code>CArG</code> 為 promoter 2 kb 內 CArG-like motif 數量。</p>
-<div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Rostellum index</th><th>S3 GR/G</th><th>S4 GR/G</th><th>BGR/B</th><th>MADS corr</th><th>CArG</th><th>HPP92</th><th>Module</th><th>Annotation</th></tr></thead><tbody>
-<tr><td><code>VANPL_A_00001t017650</code></td><td class="num">19.00</td><td class="num">4.64</td><td class="num">6.20</td><td class="num">3.09</td><td class="num">3.62</td><td class="num">0.67</td><td class="num">2</td><td>HPP92_026310</td><td></td><td>Sugar transport protein MST3</td></tr>
-<tr><td><code>VANPL_A_00012t008630</code></td><td class="num">17.60</td><td class="num">4.67</td><td class="num">5.02</td><td class="num">4.31</td><td class="num">1.60</td><td class="num">0.61</td><td class="num">3</td><td>HPP92_022814</td><td></td><td>aspartic proteinase CDR1-like</td></tr>
-<tr><td><code>VANPL_A_00004t004860</code></td><td class="num">16.51</td><td class="num">3.11</td><td class="num">4.69</td><td class="num">1.52</td><td class="num">5.44</td><td class="num">0.66</td><td class="num">3</td><td>HPP92_008634</td><td></td><td>Bidirectional sugar transporter SWEET4</td></tr>
-<tr><td><code>VANPL_A_00013t004770</code></td><td class="num">16.28</td><td class="num">3.31</td><td class="num">4.24</td><td class="num">2.37</td><td class="num">2.88</td><td class="num">0.68</td><td class="num">2</td><td>HPP92_023935</td><td>turquoise</td><td>GPI-anchored lipid transfer protein 9</td></tr>
-<tr><td><code>VANPL_A_00009t008760</code></td><td class="num">16.21</td><td class="num">4.28</td><td class="num">6.49</td><td class="num">2.06</td><td class="num">3.65</td><td class="num">0.69</td><td class="num">4</td><td>HPP92_018099</td><td></td><td>hypothetical protein</td></tr>
-<tr><td><code>VANPL_A_00013t001880</code></td><td class="num">16.19</td><td class="num">3.83</td><td class="num">5.38</td><td class="num">2.27</td><td class="num">3.97</td><td class="num">0.68</td><td class="num">0</td><td>HPP92_023627</td><td>turquoise</td><td>Ras-related protein Rab7-like</td></tr>
-<tr><td><code>VANPL_A_00012t003490</code></td><td class="num">15.43</td><td class="num">3.56</td><td class="num">4.91</td><td class="num">2.21</td><td class="num">1.30</td><td class="num">0.70</td><td class="num">3</td><td>HPP92_022186</td><td>turquoise</td><td>Subtilisin-like protease 4</td></tr>
-<tr><td><code>VANPL_A_00001t033180</code></td><td class="num">15.37</td><td class="num">3.24</td><td class="num">4.72</td><td class="num">1.77</td><td class="num">4.31</td><td class="num">0.85</td><td class="num">2</td><td>HPP92_003925</td><td></td><td>Invertase inhibitor</td></tr>
-<tr><td><code>VANPL_A_00001t028930</code></td><td class="num">14.25</td><td class="num">2.86</td><td class="num">4.37</td><td class="num">1.35</td><td class="num">4.69</td><td class="num">0.71</td><td class="num">2</td><td>HPP92_026554</td><td></td><td>Subtilisin-like protease SBT5.3</td></tr>
-<tr><td><code>VANPL_A_00002t004950</code></td><td class="num">13.31</td><td class="num">2.49</td><td class="num">2.08</td><td class="num">2.89</td><td class="num">3.41</td><td class="num">0.86</td><td class="num">2</td><td>HPP92_004877</td><td></td><td>LOB domain-containing protein 11-like</td></tr>
-<tr><td><code>VANPL_A_00010t001660</code></td><td class="num">13.26</td><td class="num">2.66</td><td class="num">4.65</td><td class="num">0.66</td><td class="num">4.83</td><td class="num">0.74</td><td class="num">3</td><td>HPP92_019030</td><td></td><td>putative LOB domain-containing protein 20</td></tr>
+<p><code>S3 GR/G</code> 與 <code>S4 GR/G</code> 為 log2 fold change；<code>MADS corr</code> 為與本地 MADS-like bait 的最高相關性；<code>CArG</code> 為 promoter 2 kb 內 CArG-like motif 數量。表格不含文章 ID 或 module 欄位。</p>
+<div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Rostellum index</th><th>S3 GR/G</th><th>S4 GR/G</th><th>BGR/B</th><th>MADS corr</th><th>CArG</th><th>Annotation</th></tr></thead><tbody>
+<tr><td><code>VANPL_A_00001t017650</code></td><td class="num">19.00</td><td class="num">4.64</td><td class="num">6.20</td><td class="num">3.09</td><td class="num">3.62</td><td class="num">0.67</td><td class="num">2</td><td>Sugar transport protein MST3</td></tr>
+<tr><td><code>VANPL_A_00012t008630</code></td><td class="num">17.60</td><td class="num">4.67</td><td class="num">5.02</td><td class="num">4.31</td><td class="num">1.60</td><td class="num">0.61</td><td class="num">3</td><td>aspartic proteinase CDR1-like</td></tr>
+<tr><td><code>VANPL_A_00004t004860</code></td><td class="num">16.51</td><td class="num">3.11</td><td class="num">4.69</td><td class="num">1.52</td><td class="num">5.44</td><td class="num">0.66</td><td class="num">3</td><td>Bidirectional sugar transporter SWEET4</td></tr>
+<tr><td><code>VANPL_A_00009t008760</code></td><td class="num">16.21</td><td class="num">4.28</td><td class="num">6.49</td><td class="num">2.06</td><td class="num">3.65</td><td class="num">0.69</td><td class="num">4</td><td>hypothetical protein</td></tr>
+<tr><td><code>VANPL_A_00001t033180</code></td><td class="num">15.37</td><td class="num">3.24</td><td class="num">4.72</td><td class="num">1.77</td><td class="num">4.31</td><td class="num">0.85</td><td class="num">2</td><td>Invertase inhibitor</td></tr>
+<tr><td><code>VANPL_A_00006t006720</code></td><td class="num">15.27</td><td class="num">4.48</td><td class="num">4.04</td><td class="num">4.92</td><td class="num">-0.35</td><td class="num">0.55</td><td class="num">1</td><td>conserved hypothetical protein</td></tr>
+<tr><td><code>VANPL_A_00013t004770</code></td><td class="num">14.78</td><td class="num">3.31</td><td class="num">4.24</td><td class="num">2.37</td><td class="num">2.88</td><td class="num">0.68</td><td class="num">2</td><td>GPI-anchored lipid transfer protein 9</td></tr>
+<tr><td><code>VANPL_A_00013t001880</code></td><td class="num">14.69</td><td class="num">3.83</td><td class="num">5.38</td><td class="num">2.27</td><td class="num">3.97</td><td class="num">0.68</td><td class="num">0</td><td>Ras-related protein Rab7-like</td></tr>
+<tr><td><code>VANPL_A_00001t028930</code></td><td class="num">14.25</td><td class="num">2.86</td><td class="num">4.37</td><td class="num">1.35</td><td class="num">4.69</td><td class="num">0.71</td><td class="num">2</td><td>Subtilisin-like protease SBT5.3</td></tr>
+<tr><td><code>VANPL_A_00012t003490</code></td><td class="num">13.93</td><td class="num">3.56</td><td class="num">4.91</td><td class="num">2.21</td><td class="num">1.30</td><td class="num">0.70</td><td class="num">3</td><td>Subtilisin-like protease 4</td></tr>
+<tr><td><code>VANPL_A_00002t004950</code></td><td class="num">13.31</td><td class="num">2.49</td><td class="num">2.08</td><td class="num">2.89</td><td class="num">3.41</td><td class="num">0.86</td><td class="num">2</td><td>LOB domain-containing protein 11-like</td></tr>
+<tr><td><code>VANPL_A_00010t001660</code></td><td class="num">13.26</td><td class="num">2.66</td><td class="num">4.65</td><td class="num">0.66</td><td class="num">4.83</td><td class="num">0.74</td><td class="num">3</td><td>putative LOB domain-containing protein 20</td></tr>
 </tbody></table></div>
 </section>
 <section>
 <h2>Biological Interpretation</h2>
 <h3>Priority Tier 1: 調控與發育型候選</h3>
 <p><code>VANPL_A_00002t004950</code> 與 <code>VANPL_A_00010t001660</code> 皆為 LOB domain-containing protein。LOB/LBD 類基因常與器官邊界、側生器官發育、局部生長調控相關，因此比單純代謝基因更適合作為「改變 rostellum 結構」的上游候選。</p>
-<p><code>VANPL_A_00012t003490</code> 與 <code>VANPL_A_00001t028930</code> 為 subtilisin-like protease，可能參與細胞外 peptide processing、組織 remodeling 或發育訊號調節。其中 <code>VANPL_A_00012t003490</code> 同時落在文章 turquoise module，該 module 含 <code>VpMADS5,VpMADS12,VpMADS14,VpMADS22</code>，值得優先驗證。</p>
+<p><code>VANPL_A_00012t003490</code> 與 <code>VANPL_A_00001t028930</code> 為 subtilisin-like protease，可能參與細胞外 peptide processing、組織 remodeling 或發育訊號調節。它們在我們重新 mapping 後的 CR0040A expression matrix 中具有 rostellum-associated signal，因此值得優先驗證。</p>
 <h3>Priority Tier 2: 生長支持與細胞壁候選</h3>
 <p><code>VANPL_A_00001t017650</code>、<code>VANPL_A_00004t004860</code>、<code>VANPL_A_00001t033180</code> 涉及糖運輸或糖代謝控制。這類基因可能不是 rostellum fate 的主開關，但可能支援 rostellum 局部快速生長。</p>
 <p><code>VANPL_A_00001t009440</code> 與 <code>VANPL_A_00003t002840</code> 是 glycosidase/cell-wall related candidates，可作為細胞壁 remodeling 方向的驗證標的。</p>
@@ -98,7 +98,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <ul>
 <li>目前 ranking 使用 effect size 與 consistency，不是 DESeq2/edgeR 的正式差異表現統計。</li>
 <li>CArG motif 是 motif presence，不等於 MADS-box 實際 binding。</li>
-<li>文章品系與參考基因組版本不同，因此 HPP92/KAG crosswalk 不能取代 CR0040A 本地分析。</li>
+<li>文章品系與參考基因組版本不同；本階段不使用文章 HPP92/KAG crosswalk 或 WGCNA module 來排序候選基因。</li>
 <li>公共資料的 tissue/stage label 需要靠 qPCR 與形態樣本再次確認。</li>
 </ul>
 </section>
