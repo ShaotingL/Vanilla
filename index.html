@@ -28,6 +28,28 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <section>
 <h2>Data And QC</h2>
 <p>主要輸入為 nf-core/featureCounts matrix：<code>PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。參考基因組與註解為 <code>CR0040_HaplotypeA</code>。</p>
+<h3>Sample Design</h3>
+<p>公共資料共有 39 個 RNA-seq runs；排除 <code>SRR24981847 / B_S2_A</code> 後，本次分析使用 38 個 runs。樣本命名格式為 <code>tissue_stage_replicate</code>，例如 <code>GR_S3_A</code> 代表 GR tissue、S3 stage、A replicate。</p>
+<ul>
+<li><code>S1-S4</code>：花發育階段；本分析把 S3/S4 當作較接近 rostellum 形成與功能的主要比較階段。</li>
+<li><code>BGR</code>、<code>B</code>、<code>GR</code>、<code>G</code>：原始公共資料的 tissue code，本階段保留原始命名，不用文章結果重新詮釋。</li>
+<li>主要 rostellum 對比為 <code>S3_GR_vs_G</code> 與 <code>S4_GR_vs_G</code>；<code>BGR_vs_B</code> 作為 tissue-level supporting signal。</li>
+</ul>
+<div class="wrap"><table><thead><tr><th>Stage</th><th>Tissue code</th><th>n</th><th>Replicates</th><th>Sample IDs</th><th>SRR runs</th></tr></thead><tbody>
+<tr><td>S1</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S1_A</code>, <code>BGR_S1_B</code>, <code>BGR_S1_C</code></td><td><code>SRR24981869</code>, <code>SRR24981868</code>, <code>SRR24981858</code></td></tr>
+<tr><td>S1</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S1_A</code>, <code>B_S1_B</code>, <code>B_S1_C</code></td><td><code>SRR24981867</code>, <code>SRR24981852</code>, <code>SRR24981851</code></td></tr>
+<tr><td>S2</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S2_A</code>, <code>BGR_S2_B</code>, <code>BGR_S2_C</code></td><td><code>SRR24981850</code>, <code>SRR24981849</code>, <code>SRR24981848</code></td></tr>
+<tr><td>S2</td><td>B</td><td class="num">2</td><td>B, C</td><td><code>B_S2_B</code>, <code>B_S2_C</code></td><td><code>SRR24981842</code>, <code>SRR24981843</code></td></tr>
+<tr><td>S2</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S2_A</code>, <code>GR_S2_B</code>, <code>GR_S2_C</code></td><td><code>SRR24981844</code>, <code>SRR24981845</code>, <code>SRR24981846</code></td></tr>
+<tr><td>S3</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S3_A</code>, <code>BGR_S3_B</code>, <code>BGR_S3_C</code></td><td><code>SRR24981853</code>, <code>SRR24981854</code>, <code>SRR24981855</code></td></tr>
+<tr><td>S3</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S3_A</code>, <code>B_S3_B</code>, <code>B_S3_C</code></td><td><code>SRR24981856</code>, <code>SRR24981857</code>, <code>SRR24981859</code></td></tr>
+<tr><td>S3</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S3_A</code>, <code>GR_S3_B</code>, <code>GR_S3_C</code></td><td><code>SRR24981860</code>, <code>SRR24981861</code>, <code>SRR24981862</code></td></tr>
+<tr><td>S3</td><td>G</td><td class="num">3</td><td>A, B, C</td><td><code>G_S3_A</code>, <code>G_S3_B</code>, <code>G_S3_C</code></td><td><code>SRR24981863</code>, <code>SRR24981864</code>, <code>SRR24981865</code></td></tr>
+<tr><td>S4</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S4_A</code>, <code>BGR_S4_B</code>, <code>BGR_S4_C</code></td><td><code>SRR24981866</code>, <code>SRR24981836</code>, <code>SRR24981837</code></td></tr>
+<tr><td>S4</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S4_A</code>, <code>B_S4_B</code>, <code>B_S4_C</code></td><td><code>SRR24981839</code>, <code>SRR24981840</code>, <code>SRR24981841</code></td></tr>
+<tr><td>S4</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S4_A</code>, <code>GR_S4_B</code>, <code>GR_S4_C</code></td><td><code>SRR24981838</code>, <code>SRR24981835</code>, <code>SRR24981834</code></td></tr>
+<tr><td>S4</td><td>G</td><td class="num">3</td><td>A, B, C</td><td><code>G_S4_A</code>, <code>G_S4_B</code>, <code>G_S4_C</code></td><td><code>SRR24981833</code>, <code>SRR24981832</code>, <code>SRR24981831</code></td></tr>
+</tbody></table></div>
 <div class="warn"><strong>排除樣本：</strong><code>SRR24981847 / B_S2_A</code>。此樣本 assigned reads 只有 462，STAR unique mapping 為 0.06%。FASTQ md5 與 ENA 一致，因此不是下載損壞，而是 public run 本身或樣本內容異常。</div>
 </section>
 <section>
