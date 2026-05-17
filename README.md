@@ -16,7 +16,9 @@ Render as HTML with htmlpreview:
 
 Notes:
 
-- This analysis uses public sequencing files remapped to `CR0040_HaplotypeA` and the resulting featureCounts matrix.
+- RNA-seq preprocessing was based on `nf-core/rnaseq v3.21.0`; the default alignment/quantification mode is `--aligner star_salmon` (STAR alignment followed by Salmon quantification).
+- The current candidate ranking uses the available project count matrix at `results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt`.
+- I did not find a standard Salmon merged gene-count matrix such as `star_salmon/salmon.merged.gene_counts.tsv` under the current `results/` directory. If that file is located later, the ranking should be rerun from the Salmon matrix.
 - Article gene IDs, WGCNA modules, and published candidate results are held out from ranking; they should be compared only after the CR0040A analysis is complete.
 - This online report is a compact HTML version for browsing outside the local workstation.
 - Raw data, genome references, RNA-seq counts, and intermediate tables are not included.
