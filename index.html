@@ -11,7 +11,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <body>
 <header>
 <h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
-<p class="muted">用公共定序檔案重新 mapping 到 <code>CR0040_HaplotypeA</code> 後的 featureCounts 結果，篩選 rostellum 發育與 MADS-box 調控相關候選基因。報告日期：2026-05-17。</p>
+<p class="muted">用公共定序檔案重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，目前專案資料夾中可用的 raw count matrix，篩選 rostellum 發育與 MADS-box 調控相關候選基因。報告日期：2026-05-17。</p>
 </header>
 <main>
 <section>
@@ -22,12 +22,13 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans
 <div class="metric"><div class="value">50</div><div class="label">qPCR shortlist genes</div></div>
 <div class="metric"><div class="value">CR0040A-only</div><div class="label">只使用我們 mapping 後的結果</div></div>
 </div>
-<p>本階段只使用公共定序檔案，將 reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，以我們自己的 featureCounts 結果進行候選基因篩選。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入本階段 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。</p>
+<p>本階段只使用公共定序檔案，將 reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，以目前專案資料夾中可用的 raw count matrix 進行候選基因篩選。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入本階段 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。注意：nf-core/rnaseq v3.21.0 預設 quantification 是 Salmon；如果之後找到標準 Salmon merged gene-count matrix，應改用 Salmon matrix 重新跑本分析。</p>
 <div class="note"><strong>主要結論：</strong>第一波應優先驗證 LOB domain genes、subtilisin/CDR1-like protease、SWEET/MST sugar transport genes，以及 cell-wall remodeling genes。這些候選來自我們自己的 mapping/counts、CR0040A 註解、local MADS-like co-expression 與 promoter CArG motif。</div>
 </section>
 <section>
 <h2>Data And QC</h2>
-<p>主要輸入為 nf-core/featureCounts matrix：<code>PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。參考基因組與註解為 <code>CR0040_HaplotypeA</code>。</p>
+<p>RNA-seq 前處理使用 <a href="https://nf-co.re/rnaseq/3.21.0/docs/output/">nf-core/rnaseq v3.21.0</a> 預設流程；該版本預設 alignment/quantification 方案為 <code>--aligner star_salmon</code>，也就是 STAR alignment 後接 Salmon quantification。nf-core/rnaseq 的 output documentation 將所有路徑定義為相對於 top-level <code>results/</code> directory。</p>
+<p>本次 CR0040A 候選基因 ranking 目前實際讀入的是此專案結果資料夾中整理出的 raw count matrix：<code>/mnt/h/Sequence_Lab/4.Vanilla/results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。目前在 <code>/mnt/h/Sequence_Lab/4.Vanilla/results/</code> 下沒有找到標準 Salmon merged gene-count matrix，例如 <code>star_salmon/salmon.merged.gene_counts.tsv</code> 或 <code>salmon.merged.gene_counts.tsv</code>；若之後找到 Salmon gene counts，應改用 Salmon matrix 重新跑一次候選基因 ranking。參考基因組與註解為 <code>/mnt/d/Vanilla/reference/CR0040_HaplotypeA.*</code>。</p>
 <h3>Sample Design</h3>
 <p>公共資料共有 39 個 RNA-seq runs；排除 <code>SRR24981847 / B_S2_A</code> 後，本次分析使用 38 個 runs。樣本命名格式為 <code>tissue_stage_replicate</code>，例如 <code>GR_S3_A</code> 代表 GR tissue、S3 stage、A replicate。</p>
 <ul>
