@@ -5,126 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CR0040A Vanilla Rostellum MADS Target Analysis</title>
 <style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.62;color:#20242a;background:#fff}header{padding:42px min(7vw,72px) 30px;border-bottom:1px solid #d9dee6;background:#f7fbfa}main{max-width:1160px;margin:auto;padding:28px 24px 64px}h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:40px 0 14px;padding-top:10px;border-top:1px solid #d9dee6;font-size:24px}h3{font-size:18px;margin-top:26px}.muted{color:#5d6673}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.metric{border:1px solid #d9dee6;border-radius:8px;padding:16px;background:#f5f7fa}.metric .value{font-size:26px;font-weight:700;color:#0f766e}.metric .label{font-size:14px;color:#5d6673}.note{border-left:4px solid #0f766e;padding:12px 16px;background:#eefaf7;margin:18px 0}.warn{border-left:4px solid #9f1239;padding:12px 16px;background:#fff1f2;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #d9dee6;padding:8px 9px;text-align:left;vertical-align:top}th{background:#f2f5f8}.num{text-align:right;font-variant-numeric:tabular-nums}.wrap{overflow-x:auto;border:1px solid #d9dee6;border-radius:8px;margin:14px 0 26px}code{background:#eef1f5;padding:1px 4px;border-radius:4px;font-family:Consolas,"Liberation Mono",monospace;font-size:.92em}a{color:#7c3aed;text-decoration:none}a:hover{text-decoration:underline}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.62;color:#20242a;background:#fff}header{padding:42px min(7vw,72px) 30px;border-bottom:1px solid #d9dee6;background:#f7fbfa}main{max-width:1160px;margin:auto;padding:28px 24px 64px}h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:40px 0 14px;padding-top:10px;border-top:1px solid #d9dee6;font-size:24px}.muted{color:#5d6673}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.metric{border:1px solid #d9dee6;border-radius:8px;padding:16px;background:#f5f7fa}.metric .value{font-size:26px;font-weight:700;color:#0f766e}.metric .label{font-size:14px;color:#5d6673}.note{border-left:4px solid #0f766e;padding:12px 16px;background:#eefaf7;margin:18px 0}.warn{border-left:4px solid #9f1239;padding:12px 16px;background:#fff1f2;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #d9dee6;padding:8px 9px;text-align:left;vertical-align:top}th{background:#f2f5f8}.num{text-align:right;font-variant-numeric:tabular-nums}.wrap{overflow-x:auto;border:1px solid #d9dee6;border-radius:8px;margin:14px 0 26px}code{background:#eef1f5;padding:1px 4px;border-radius:4px;font-family:Consolas,"Liberation Mono",monospace;font-size:.92em}a{color:#7c3aed;text-decoration:none}
 </style>
 </head>
 <body>
 <header>
 <h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
-<p class="muted">用公共定序檔案重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，目前專案資料夾中可用的 raw count matrix，篩選 rostellum 發育與 MADS-box 調控相關候選基因。報告日期：2026-05-17。</p>
+<p class="muted">公共定序檔案重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，用目前可用 raw count matrix 與 PyDESeq2 進行 rostellum/MADS 候選基因分析。報告日期：2026-05-17。</p>
 </header>
 <main>
-<section>
-<h2>Executive Summary</h2>
-<div class="grid">
-<div class="metric"><div class="value">38</div><div class="label">納入分析的 RNA-seq samples</div></div>
-<div class="metric"><div class="value">26,392</div><div class="label">CR0040A genes ranked</div></div>
-<div class="metric"><div class="value">50</div><div class="label">qPCR shortlist genes</div></div>
-<div class="metric"><div class="value">CR0040A-only</div><div class="label">只使用我們 mapping 後的結果</div></div>
-</div>
-<p>本階段只使用公共定序檔案，將 reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，以目前專案資料夾中可用的 raw count matrix 進行候選基因篩選。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入本階段 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。注意：nf-core/rnaseq v3.21.0 預設 quantification 是 Salmon；如果之後找到標準 Salmon merged gene-count matrix，應改用 Salmon matrix 重新跑本分析。</p>
-<div class="note"><strong>主要結論：</strong>第一波應優先驗證 LOB domain genes、subtilisin/CDR1-like protease、SWEET/MST sugar transport genes，以及 cell-wall remodeling genes。這些候選來自我們自己的 mapping/counts、CR0040A 註解、local MADS-like co-expression 與 promoter CArG motif。</div>
-</section>
-<section>
-<h2>Data And QC</h2>
-<p>RNA-seq 前處理使用 <a href="https://nf-co.re/rnaseq/3.21.0/docs/output/">nf-core/rnaseq v3.21.0</a> 預設流程；該版本預設 alignment/quantification 方案為 <code>--aligner star_salmon</code>，也就是 STAR alignment 後接 Salmon quantification。nf-core/rnaseq 的 output documentation 將所有路徑定義為相對於 top-level <code>results/</code> directory。</p>
-<p>本次 CR0040A 候選基因 ranking 目前實際讀入的是此專案結果資料夾中整理出的 raw count matrix：<code>/mnt/h/Sequence_Lab/4.Vanilla/results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。目前在 <code>/mnt/h/Sequence_Lab/4.Vanilla/results/</code> 下沒有找到標準 Salmon merged gene-count matrix，例如 <code>star_salmon/salmon.merged.gene_counts.tsv</code> 或 <code>salmon.merged.gene_counts.tsv</code>；若之後找到 Salmon gene counts，應改用 Salmon matrix 重新跑一次候選基因 ranking。參考基因組與註解為 <code>/mnt/d/Vanilla/reference/CR0040_HaplotypeA.*</code>。</p>
-<h3>Sample Design</h3>
-<p>公共資料共有 39 個 RNA-seq runs；排除 <code>SRR24981847 / B_S2_A</code> 後，本次分析使用 38 個 runs。樣本命名格式為 <code>tissue_stage_replicate</code>，例如 <code>GR_S3_A</code> 代表 GR tissue、S3 stage、A replicate。</p>
-<ul>
-<li><code>S1-S4</code>：花發育階段；本分析把 S3/S4 當作較接近 rostellum 形成與功能的主要比較階段。</li>
-<li><code>BGR</code>、<code>B</code>、<code>GR</code>、<code>G</code>：原始公共資料的 tissue code，本階段保留原始命名，不用文章結果重新詮釋。</li>
-<li>主要 rostellum 對比為 <code>S3_GR_vs_G</code> 與 <code>S4_GR_vs_G</code>；<code>BGR_vs_B</code> 作為 tissue-level supporting signal。</li>
-</ul>
-<div class="wrap"><table><thead><tr><th>Stage</th><th>Tissue code</th><th>n</th><th>Replicates</th><th>Sample IDs</th><th>SRR runs</th></tr></thead><tbody>
-<tr><td>S1</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S1_A</code>, <code>BGR_S1_B</code>, <code>BGR_S1_C</code></td><td><code>SRR24981869</code>, <code>SRR24981868</code>, <code>SRR24981858</code></td></tr>
-<tr><td>S1</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S1_A</code>, <code>B_S1_B</code>, <code>B_S1_C</code></td><td><code>SRR24981867</code>, <code>SRR24981852</code>, <code>SRR24981851</code></td></tr>
-<tr><td>S2</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S2_A</code>, <code>BGR_S2_B</code>, <code>BGR_S2_C</code></td><td><code>SRR24981850</code>, <code>SRR24981849</code>, <code>SRR24981848</code></td></tr>
-<tr><td>S2</td><td>B</td><td class="num">2</td><td>B, C</td><td><code>B_S2_B</code>, <code>B_S2_C</code></td><td><code>SRR24981842</code>, <code>SRR24981843</code></td></tr>
-<tr><td>S2</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S2_A</code>, <code>GR_S2_B</code>, <code>GR_S2_C</code></td><td><code>SRR24981844</code>, <code>SRR24981845</code>, <code>SRR24981846</code></td></tr>
-<tr><td>S3</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S3_A</code>, <code>BGR_S3_B</code>, <code>BGR_S3_C</code></td><td><code>SRR24981853</code>, <code>SRR24981854</code>, <code>SRR24981855</code></td></tr>
-<tr><td>S3</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S3_A</code>, <code>B_S3_B</code>, <code>B_S3_C</code></td><td><code>SRR24981856</code>, <code>SRR24981857</code>, <code>SRR24981859</code></td></tr>
-<tr><td>S3</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S3_A</code>, <code>GR_S3_B</code>, <code>GR_S3_C</code></td><td><code>SRR24981860</code>, <code>SRR24981861</code>, <code>SRR24981862</code></td></tr>
-<tr><td>S3</td><td>G</td><td class="num">3</td><td>A, B, C</td><td><code>G_S3_A</code>, <code>G_S3_B</code>, <code>G_S3_C</code></td><td><code>SRR24981863</code>, <code>SRR24981864</code>, <code>SRR24981865</code></td></tr>
-<tr><td>S4</td><td>BGR</td><td class="num">3</td><td>A, B, C</td><td><code>BGR_S4_A</code>, <code>BGR_S4_B</code>, <code>BGR_S4_C</code></td><td><code>SRR24981866</code>, <code>SRR24981836</code>, <code>SRR24981837</code></td></tr>
-<tr><td>S4</td><td>B</td><td class="num">3</td><td>A, B, C</td><td><code>B_S4_A</code>, <code>B_S4_B</code>, <code>B_S4_C</code></td><td><code>SRR24981839</code>, <code>SRR24981840</code>, <code>SRR24981841</code></td></tr>
-<tr><td>S4</td><td>GR</td><td class="num">3</td><td>A, B, C</td><td><code>GR_S4_A</code>, <code>GR_S4_B</code>, <code>GR_S4_C</code></td><td><code>SRR24981838</code>, <code>SRR24981835</code>, <code>SRR24981834</code></td></tr>
-<tr><td>S4</td><td>G</td><td class="num">3</td><td>A, B, C</td><td><code>G_S4_A</code>, <code>G_S4_B</code>, <code>G_S4_C</code></td><td><code>SRR24981833</code>, <code>SRR24981832</code>, <code>SRR24981831</code></td></tr>
-</tbody></table></div>
-<div class="warn"><strong>排除樣本：</strong><code>SRR24981847 / B_S2_A</code>。此樣本 assigned reads 只有 462，STAR unique mapping 為 0.06%。FASTQ md5 與 ENA 一致，因此不是下載損壞，而是 public run 本身或樣本內容異常。</div>
-</section>
-<section>
-<h2>Analysis Strategy</h2>
-<ol>
-<li><strong>Normalization：</strong>使用 DESeq-like median-ratio size factor。</li>
-<li><strong>Rostellum signal：</strong>計算 <code>S3_GR_vs_G</code> 與 <code>S4_GR_vs_G</code> log2 fold change，並加入 replicate pairwise consistency。</li>
-<li><strong>BGR/B support：</strong>用 BGR vs B 補充判斷 rostellum-related tissue signal。</li>
-<li><strong>MADS-like co-expression：</strong>用 CR0040A 本地註解中的 MADS-like genes 作為 bait，計算候選基因相關性。</li>
-<li><strong>Promoter CArG motif：</strong>掃描上游 2 kb CArG-like motif，作為可能被 MADS-box 直接調控的弱證據。</li>
-<li><strong>Hold-out comparison：</strong>文章結果先保留不用於 ranking，等本分析完成後再做外部比較。</li>
-</ol>
-<p>注意：目前是候選基因 prioritization，不是正式 DESeq2/edgeR 差異表現統計。</p>
-</section>
-<section>
-<h2>Local CR0040A MADS-like Bait Genes</h2>
-<p>以下 bait genes 由 CR0040A 註解與我們自己的 expression matrix 中篩出，不使用文章的 ID 或 module。</p>
-<div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Annotation</th></tr></thead><tbody>
-<tr><td><code>VANPL_A_00001t031260</code></td><td class="num">2.31</td><td>putative MADS-box protein SVP</td></tr>
-<tr><td><code>VANPL_A_00001t004780</code></td><td class="num">1.98</td><td>Floral homeotic protein AGAMOUS</td></tr>
-<tr><td><code>VANPL_A_00003t009520</code></td><td class="num">1.66</td><td>Agamous-like MADS-box protein AGL62</td></tr>
-<tr><td><code>VANPL_A_00010t006110</code></td><td class="num">1.46</td><td>Floral homeotic protein AGAMOUS</td></tr>
-<tr><td><code>VANPL_A_00006t009700</code></td><td class="num">1.34</td><td>floral homeotic protein APETALA 2-like isoform X3</td></tr>
-<tr><td><code>VANPL_A_00009t012690</code></td><td class="num">1.32</td><td>putative Agamous-like MADS-box protein AGL11</td></tr>
-<tr><td><code>VANPL_A_00012t007660</code></td><td class="num">1.26</td><td>putative MADS-box transcription factor 32</td></tr>
-<tr><td><code>VANPL_A_00004t007990</code></td><td class="num">1.12</td><td>MADS-box transcription factor 26</td></tr>
-</tbody></table></div>
-</section>
-<section>
-<h2>Top qPCR Candidate Genes</h2>
-<p><code>S3 GR/G</code> 與 <code>S4 GR/G</code> 為 log2 fold change；<code>MADS corr</code> 為與本地 MADS-like bait 的最高相關性；<code>CArG</code> 為 promoter 2 kb 內 CArG-like motif 數量。表格不含文章 ID 或 module 欄位。</p>
-<div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Rostellum index</th><th>S3 GR/G</th><th>S4 GR/G</th><th>BGR/B</th><th>MADS corr</th><th>CArG</th><th>Annotation</th></tr></thead><tbody>
-<tr><td><code>VANPL_A_00001t017650</code></td><td class="num">19.00</td><td class="num">4.64</td><td class="num">6.20</td><td class="num">3.09</td><td class="num">3.62</td><td class="num">0.67</td><td class="num">2</td><td>Sugar transport protein MST3</td></tr>
-<tr><td><code>VANPL_A_00012t008630</code></td><td class="num">17.60</td><td class="num">4.67</td><td class="num">5.02</td><td class="num">4.31</td><td class="num">1.60</td><td class="num">0.61</td><td class="num">3</td><td>aspartic proteinase CDR1-like</td></tr>
-<tr><td><code>VANPL_A_00004t004860</code></td><td class="num">16.51</td><td class="num">3.11</td><td class="num">4.69</td><td class="num">1.52</td><td class="num">5.44</td><td class="num">0.66</td><td class="num">3</td><td>Bidirectional sugar transporter SWEET4</td></tr>
-<tr><td><code>VANPL_A_00009t008760</code></td><td class="num">16.21</td><td class="num">4.28</td><td class="num">6.49</td><td class="num">2.06</td><td class="num">3.65</td><td class="num">0.69</td><td class="num">4</td><td>hypothetical protein</td></tr>
-<tr><td><code>VANPL_A_00001t033180</code></td><td class="num">15.37</td><td class="num">3.24</td><td class="num">4.72</td><td class="num">1.77</td><td class="num">4.31</td><td class="num">0.85</td><td class="num">2</td><td>Invertase inhibitor</td></tr>
-<tr><td><code>VANPL_A_00006t006720</code></td><td class="num">15.27</td><td class="num">4.48</td><td class="num">4.04</td><td class="num">4.92</td><td class="num">-0.35</td><td class="num">0.55</td><td class="num">1</td><td>conserved hypothetical protein</td></tr>
-<tr><td><code>VANPL_A_00013t004770</code></td><td class="num">14.78</td><td class="num">3.31</td><td class="num">4.24</td><td class="num">2.37</td><td class="num">2.88</td><td class="num">0.68</td><td class="num">2</td><td>GPI-anchored lipid transfer protein 9</td></tr>
-<tr><td><code>VANPL_A_00013t001880</code></td><td class="num">14.69</td><td class="num">3.83</td><td class="num">5.38</td><td class="num">2.27</td><td class="num">3.97</td><td class="num">0.68</td><td class="num">0</td><td>Ras-related protein Rab7-like</td></tr>
-<tr><td><code>VANPL_A_00001t028930</code></td><td class="num">14.25</td><td class="num">2.86</td><td class="num">4.37</td><td class="num">1.35</td><td class="num">4.69</td><td class="num">0.71</td><td class="num">2</td><td>Subtilisin-like protease SBT5.3</td></tr>
-<tr><td><code>VANPL_A_00012t003490</code></td><td class="num">13.93</td><td class="num">3.56</td><td class="num">4.91</td><td class="num">2.21</td><td class="num">1.30</td><td class="num">0.70</td><td class="num">3</td><td>Subtilisin-like protease 4</td></tr>
-<tr><td><code>VANPL_A_00002t004950</code></td><td class="num">13.31</td><td class="num">2.49</td><td class="num">2.08</td><td class="num">2.89</td><td class="num">3.41</td><td class="num">0.86</td><td class="num">2</td><td>LOB domain-containing protein 11-like</td></tr>
-<tr><td><code>VANPL_A_00010t001660</code></td><td class="num">13.26</td><td class="num">2.66</td><td class="num">4.65</td><td class="num">0.66</td><td class="num">4.83</td><td class="num">0.74</td><td class="num">3</td><td>putative LOB domain-containing protein 20</td></tr>
-</tbody></table></div>
-</section>
-<section>
-<h2>Biological Interpretation</h2>
-<h3>Priority Tier 1: 調控與發育型候選</h3>
-<p><code>VANPL_A_00002t004950</code> 與 <code>VANPL_A_00010t001660</code> 皆為 LOB domain-containing protein。LOB/LBD 類基因常與器官邊界、側生器官發育、局部生長調控相關，因此比單純代謝基因更適合作為「改變 rostellum 結構」的上游候選。</p>
-<p><code>VANPL_A_00012t003490</code> 與 <code>VANPL_A_00001t028930</code> 為 subtilisin-like protease，可能參與細胞外 peptide processing、組織 remodeling 或發育訊號調節。它們在我們重新 mapping 後的 CR0040A expression matrix 中具有 rostellum-associated signal，因此值得優先驗證。</p>
-<h3>Priority Tier 2: 生長支持與細胞壁候選</h3>
-<p><code>VANPL_A_00001t017650</code>、<code>VANPL_A_00004t004860</code>、<code>VANPL_A_00001t033180</code> 涉及糖運輸或糖代謝控制。這類基因可能不是 rostellum fate 的主開關，但可能支援 rostellum 局部快速生長。</p>
-<p><code>VANPL_A_00001t009440</code> 與 <code>VANPL_A_00003t002840</code> 是 glycosidase/cell-wall related candidates，可作為細胞壁 remodeling 方向的驗證標的。</p>
-</section>
-<section>
-<h2>Recommended Validation Plan</h2>
-<ol>
-<li><strong>qPCR 第一輪：</strong>選 12-15 個 genes，涵蓋 LOB、subtilisin/CDR1-like、SWEET/MST、cell-wall enzymes 與 2-3 個 hypothetical top candidates。</li>
-<li><strong>樣本設計：</strong>優先重複 S3/S4 的 G vs GR 與 B vs BGR，比 S1/S2 更貼近 rostellum 形成與功能階段。</li>
-<li><strong>判斷標準：</strong>真正優先的候選應該在 GR 相對 G 顯著升高，且在 BGR 相對 B 也有同方向支持。</li>
-<li><strong>功能測試：</strong>若 qPCR 支持，先針對 LOB domain 與 subtilisin-like genes 做 transient silencing/VIGS 或局部 knockdown。</li>
-<li><strong>表型量測：</strong>量 rostellum 長度、寬度、位置、花粉接觸阻隔程度與花器官整體畸形程度，不只看授粉成功率。</li>
-</ol>
-</section>
-<section>
-<h2>Limitations</h2>
-<ul>
-<li>目前 ranking 使用 effect size 與 consistency，不是 DESeq2/edgeR 的正式差異表現統計。</li>
-<li>CArG motif 是 motif presence，不等於 MADS-box 實際 binding。</li>
-<li>文章品系與參考基因組版本不同；本階段不使用文章 HPP92/KAG crosswalk 或 WGCNA module 來排序候選基因。</li>
-<li>公共資料的 tissue/stage label 需要靠 qPCR 與形態樣本再次確認。</li>
-</ul>
-</section>
+<section><h2>Executive Summary</h2>
+<div class="grid"><div class="metric"><div class="value">38</div><div class="label">RNA-seq samples analyzed</div></div><div class="metric"><div class="value">26,392</div><div class="label">CR0040A genes ranked</div></div><div class="metric"><div class="value">6</div><div class="label">PyDESeq2 contrasts</div></div><div class="metric"><div class="value">50</div><div class="label">qPCR shortlist genes</div></div></div>
+<p>本階段只使用公共定序檔案與我們重新 mapping 到 <code>CR0040_HaplotypeA</code> 後的結果。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。</p>
+<div class="note"><strong>更新：</strong>已安裝 <code>PyDESeq2 0.5.4</code> 並完成 DESeq2-style Wald test。候選表現在包含 S3/S4 GR vs G 的 DESeq2 padj。</div></section>
+<section><h2>Input And Caveat</h2>
+<p>RNA-seq 前處理使用 <a href="https://nf-co.re/rnaseq/3.21.0/docs/output/">nf-core/rnaseq v3.21.0</a>；該版本預設 alignment/quantification 為 <code>--aligner star_salmon</code>。目前在 <code>/mnt/h/Sequence_Lab/4.Vanilla/results/</code> 沒找到標準 Salmon merged gene-count matrix，因此本次 PyDESeq2 與候選 ranking 實際讀入的是目前可用 raw count matrix：<code>results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。若之後找到 <code>star_salmon/salmon.merged.gene_counts.tsv</code>，應改用 Salmon matrix 重新跑。</p>
+<div class="warn"><strong>排除樣本：</strong><code>SRR24981847 / B_S2_A</code>，assigned reads 只有 462，STAR unique mapping 0.06%。</div></section>
+<section><h2>Sample Design</h2>
+<p>公共資料共有 39 個 RNA-seq runs；排除 <code>SRR24981847 / B_S2_A</code> 後使用 38 個 runs。樣本命名格式為 <code>tissue_stage_replicate</code>。主要 rostellum 對比為 <code>S3_GR_vs_G</code> 與 <code>S4_GR_vs_G</code>；<code>BGR_vs_B</code> 作為 tissue-level supporting signal。</p>
+<div class="wrap"><table><thead><tr><th>Stage</th><th>Tissues used</th><th>Replicates</th></tr></thead><tbody><tr><td>S1</td><td>BGR, B</td><td>3 vs 3</td></tr><tr><td>S2</td><td>BGR, B, GR</td><td>BGR=3, B=2 after exclusion, GR=3</td></tr><tr><td>S3</td><td>BGR, B, GR, G</td><td>3 each</td></tr><tr><td>S4</td><td>BGR, B, GR, G</td><td>3 each</td></tr></tbody></table></div></section>
+<section><h2>DESeq2-Style Differential Expression</h2>
+<p>PyDESeq2 was run on the current CR0040A raw count matrix. Each contrast used a single-factor <code>~ condition</code> design and Wald test.</p>
+<div class="wrap"><table><thead><tr><th>Contrast</th><th>Genes tested</th><th>padj&lt;0.05</th><th>padj&lt;0.10</th><th>|LFC|>=1 & padj&lt;0.05</th><th>Up</th><th>Down</th><th>Top gene</th><th>Top padj</th><th>Top log2FC</th></tr></thead><tbody><tr><td>S3_GR_vs_G</td><td class="num">18,245</td><td class="num">2,174</td><td class="num">2,978</td><td class="num">1,582</td><td class="num">872</td><td class="num">710</td><td><code>VANPL_A_00012t010600</code></td><td class="num">1.09e-82</td><td class="num">-8.07</td></tr><tr><td>S4_GR_vs_G</td><td class="num">18,232</td><td class="num">117</td><td class="num">279</td><td class="num">73</td><td class="num">37</td><td class="num">36</td><td><code>VANPL_A_00011t003790</code></td><td class="num">5.57e-06</td><td class="num">-1.21</td></tr><tr><td>S1_BGR_vs_B</td><td class="num">18,413</td><td class="num">4,030</td><td class="num">4,778</td><td class="num">2,223</td><td class="num">743</td><td class="num">1,480</td><td><code>VANPL_A_00006t009530</code></td><td class="num">1.18e-156</td><td class="num">-3.88</td></tr><tr><td>S2_BGR_vs_B</td><td class="num">18,266</td><td class="num">578</td><td class="num">776</td><td class="num">564</td><td class="num">73</td><td class="num">491</td><td><code>VANPL_A_00001t027220</code></td><td class="num">9.35e-25</td><td class="num">11.63</td></tr><tr><td>S3_BGR_vs_B</td><td class="num">18,114</td><td class="num">406</td><td class="num">566</td><td class="num">382</td><td class="num">73</td><td class="num">309</td><td><code>VANPL_A_00004t007370</code></td><td class="num">1.34e-42</td><td class="num">-3.72</td></tr><tr><td>S4_BGR_vs_B</td><td class="num">17,356</td><td class="num">212</td><td class="num">332</td><td class="num">176</td><td class="num">149</td><td class="num">27</td><td><code>VANPL_A_00012t008160</code></td><td class="num">1.85e-10</td><td class="num">6.44</td></tr></tbody></table></div></section>
+<section><h2>Top qPCR Candidate Genes</h2>
+<div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Rostellum index</th><th>S3 GR/G</th><th>S4 GR/G</th><th>S3 padj</th><th>S4 padj</th><th>Annotation</th></tr></thead><tbody><tr><td><code>VANPL_A_00001t017650</code></td><td class="num">19.00</td><td class="num">4.64</td><td class="num">6.20</td><td class="num">3.09</td><td class="num">0.008</td><td class="num">0.633</td><td>Sugar transport protein MST3</td></tr><tr><td><code>VANPL_A_00012t008630</code></td><td class="num">17.60</td><td class="num">4.67</td><td class="num">5.02</td><td class="num">4.31</td><td class="num">0.068</td><td></td><td>aspartic proteinase CDR1-like</td></tr><tr><td><code>VANPL_A_00004t004860</code></td><td class="num">16.51</td><td class="num">3.11</td><td class="num">4.69</td><td class="num">1.52</td><td></td><td></td><td>SWEET4</td></tr><tr><td><code>VANPL_A_00012t003490</code></td><td class="num">13.93</td><td class="num">3.56</td><td class="num">4.91</td><td class="num">2.21</td><td class="num">0.010</td><td class="num">0.816</td><td>Subtilisin-like protease 4</td></tr><tr><td><code>VANPL_A_00002t004950</code></td><td class="num">13.31</td><td class="num">2.49</td><td class="num">2.08</td><td class="num">2.89</td><td class="num">0.655</td><td class="num">0.483</td><td>LOB domain-containing protein 11-like</td></tr><tr><td><code>VANPL_A_00010t001660</code></td><td class="num">13.26</td><td class="num">2.66</td><td class="num">4.65</td><td class="num">0.66</td><td></td><td></td><td>LOB domain-containing protein 20</td></tr></tbody></table></div></section>
+<section><h2>Files</h2><p>Full local report with figures: <code>/mnt/d/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>. Full PyDESeq2 tables are in <code>/mnt/d/Vanilla/rostellum_target_analysis/cr0040a_only/deseq2/</code>.</p></section>
 </main>
 </body>
 </html>
