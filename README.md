@@ -17,7 +17,8 @@ Render as HTML with htmlpreview:
 Notes:
 
 - RNA-seq preprocessing was based on `nf-core/rnaseq v3.21.0`; the default alignment/quantification mode is `--aligner star_salmon` (STAR alignment followed by Salmon quantification).
-- The current candidate ranking uses the available project count matrix at `results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt`.
+- PyDESeq2 `0.5.4` was installed and used to run DESeq2-style Wald tests for `S3_GR_vs_G`, `S4_GR_vs_G`, and `S1-S4 BGR_vs_B` contrasts.
+- The current analysis uses the available project count matrix at `results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt`.
 - I did not find a standard Salmon merged gene-count matrix such as `star_salmon/salmon.merged.gene_counts.tsv` under the current `results/` directory. If that file is located later, the ranking should be rerun from the Salmon matrix.
 - Article gene IDs, WGCNA modules, and published candidate results are held out from ranking; they should be compared only after the CR0040A analysis is complete.
 - This online report is a compact HTML version for browsing outside the local workstation.
