@@ -1,39 +1,62 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CR0040A Vanilla Rostellum MADS Target Analysis</title>
-<style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.62;color:#20242a;background:#fff}header{padding:42px min(7vw,72px) 30px;border-bottom:1px solid #d9dee6;background:#f7fbfa}main{max-width:1160px;margin:auto;padding:28px 24px 64px}h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:40px 0 14px;padding-top:10px;border-top:1px solid #d9dee6;font-size:24px}h3{margin:26px 0 8px;font-size:18px}.muted{color:#5d6673}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.metric{border:1px solid #d9dee6;border-radius:8px;padding:16px;background:#f5f7fa}.metric .value{font-size:26px;font-weight:700;color:#0f766e}.metric .label{font-size:14px;color:#5d6673}.note{border-left:4px solid #0f766e;padding:12px 16px;background:#eefaf7;margin:18px 0}.warn{border-left:4px solid #9f1239;padding:12px 16px;background:#fff1f2;margin:18px 0}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #d9dee6;padding:8px 9px;text-align:left;vertical-align:top}th{background:#f2f5f8}.num{text-align:right;font-variant-numeric:tabular-nums}.wrap{overflow-x:auto;border:1px solid #d9dee6;border-radius:8px;margin:14px 0 26px}code{background:#eef1f5;padding:1px 4px;border-radius:4px;font-family:Consolas,"Liberation Mono",monospace;font-size:.92em}a{color:#7c3aed;text-decoration:none}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CR0040A Vanilla Rostellum MADS Target Analysis</title>
+  <style>
+    :root{--ink:#17202a;--muted:#5d6673;--line:#d9dee6;--soft:#f5f7fa;--accent:#0f766e;--accent2:#7c3aed}
+    body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.65;background:#fff}
+    header{padding:46px min(7vw,72px) 34px;border-bottom:1px solid var(--line);background:#f7fbfa}
+    main{max-width:1080px;margin:0 auto;padding:30px 24px 70px}
+    h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:38px 0 14px;padding-top:18px;border-top:1px solid var(--line)}
+    .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.card{border:1px solid var(--line);border-radius:8px;background:var(--soft);padding:18px}.card strong{display:block;font-size:26px;color:var(--accent)}
+    .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}.linkbox{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}.linkbox a{font-weight:700;color:var(--accent2);text-decoration:none}.linkbox a:hover{text-decoration:underline}
+    code{background:#eef1f5;padding:2px 5px;border-radius:4px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:#f2f5f8}.small{font-size:13px;color:var(--muted)}
+  </style>
 </head>
 <body>
 <header>
-<h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
-<p class="muted">MIKC<sup>C</sup>-type / rostellum 論文公開 RNA-seq reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後，用目前可用 raw count matrix 與 PyDESeq2 進行 rostellum/MADS 候選基因分析。報告日期：2026-05-18。</p>
+  <h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
+  <p class="muted">這是 GitHub 入口頁。完整圖表版仍保留在本地 <code>D:/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>；GitHub 版提供外部瀏覽、討論紀錄與核心分析邏輯。</p>
 </header>
 <main>
-<section><h2>Executive Summary</h2>
-<div class="grid"><div class="metric"><div class="value">38</div><div class="label">RNA-seq samples analyzed</div></div><div class="metric"><div class="value">26,392</div><div class="label">CR0040A genes ranked</div></div><div class="metric"><div class="value">6</div><div class="label">PyDESeq2 contrasts</div></div><div class="metric"><div class="value">50</div><div class="label">qPCR shortlist genes</div></div></div>
-<p>RNA-seq reads 來源為 <em>Genome-wide identification of the MIKC<sup>C</sup>-type genes in Vanilla planifolia and expression studies in the development of the rostellum</em> 這篇論文的公開定序資料。本階段只取用該論文公開 reads，將 reads 重新 mapping 到 <code>CR0040_HaplotypeA</code> 後進行分析。文章中的基因座標、HPP92/KAG 對應、WGCNA module 與候選結果不納入 ranking；等 CR0040A 分析完成後，再獨立拿來和文章結果比較。</p>
-<div class="note"><strong>目前最重要的分析原則：</strong>先用 DESeq2-style 統計回答「哪些基因有顯著差異」，再用 rostellum expression、MADS co-expression、promoter motif 與功能註解回答「哪些基因最值得先做實驗」。</div></section>
-<section><h2>Input And Caveat</h2>
-<p>本地來源 PDF：<code>papers/vanilla_flower_pollination/2025_MIKC_C_type_genes_Vanilla_planifolia_rostellum_development.pdf</code>。RNA-seq 前處理使用 <a href="https://nf-co.re/rnaseq/3.21.0/docs/output/">nf-core/rnaseq v3.21.0</a>；該版本預設 alignment/quantification 為 <code>--aligner star_salmon</code>。目前在 <code>/mnt/h/Sequence_Lab/4.Vanilla/results/</code> 沒找到標準 Salmon merged gene-count matrix，因此本次 PyDESeq2 與候選 ranking 實際讀入的是目前可用 raw count matrix：<code>results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt</code>。若之後找到 <code>star_salmon/salmon.merged.gene_counts.tsv</code>，應改用 Salmon matrix 重新跑。</p>
-<div class="warn"><strong>排除樣本：</strong><code>SRR24981847 / B_S2_A</code>，assigned reads 只有 462，STAR unique mapping 0.06%。</div></section>
-<section><h2>Sample Design</h2><p>公共資料共有 39 個 RNA-seq runs；排除 <code>SRR24981847 / B_S2_A</code> 後使用 38 個 runs。主要 rostellum 對比為 <code>S3_GR_vs_G</code> 與 <code>S4_GR_vs_G</code>；<code>BGR_vs_B</code> 作為 tissue-level supporting signal。</p></section>
-<section><h2>Analysis Strategy</h2>
-<p>這份分析的核心邏輯是：把論文公開 RNA-seq reads 當作原始資料，重新對到我們要使用的 <code>CR0040_HaplotypeA</code>，先用正式差異表現檢定找出在 rostellum 相關比較中改變的基因，再用生物學條件把名單縮小成可以做 qPCR、VIGS 或其他 functional assay 的候選基因。</p>
-<h3>1. 先定義要找的基因型態</h3><p>我們想找的不是所有花器官差異基因，而是比較可能影響 rostellum 生長、位置或隔離功能的基因。理想候選應該在 S3/S4 階段於 <code>GR</code> 相對 <code>G</code> 有較高表現，且不是單一 replicate 的偶然值。若同一基因在 <code>BGR</code> 相對 <code>B</code> 也有同方向支持，代表它可能不是只出現在一個切片或一個樣本中的訊號。</p>
-<h3>2. 只把論文定序檔案當作原始資料</h3><p>本分析目前不把論文中的 HPP92/KAG gene ID、文章候選基因、WGCNA module 或原文章 reference 座標放進 ranking，原因是避免循環論證。等 CR0040A 分析完成後，再把結果和文章名單做獨立比較。</p>
-<h3>3. 用 DESeq2-style 檢定建立正式統計基礎</h3><p>每一個 stage/contrast 以 <code>PyDESeq2 0.5.4</code> 執行 single-factor design：<code>~ condition</code>。這一步會估計 size factor、dispersion，並用 Wald test 產生 <code>baseMean</code>、<code>log2FoldChange</code>、<code>pvalue</code> 與 <code>padj</code>。主要正式比較是 <code>S3_GR_vs_G</code> 和 <code>S4_GR_vs_G</code>；<code>S1-S4 BGR_vs_B</code> 則當作組織層級支持。<code>log2FoldChange</code> 為正值時，表示前面的 tissue 比後面的 tissue 高。</p>
-<h3>4. 候選排序不是只看 p-value</h3><p>DESeq2-style 結果可以告訴我們某個比較中哪些基因差異顯著，但它不會自動告訴我們哪個基因最可能調控 rostellum 形態。因此候選排序另外整合：S3/S4 rostellum enrichment、replicate consistency、<code>BGR_vs_B</code> 是否同方向支持、與本地 CR0040A MADS-like bait genes 的共表現、上游 2 kb 是否有 CArG-like motif，以及 OrchidBase7 功能註解是否符合器官邊界、生長、細胞壁 remodeling、糖分供應或發育調控。</p>
-<h3>5. 怎麼判讀候選表</h3><p>第一波最值得驗證的基因應同時滿足多個條件：<code>S3_GR_vs_G</code> 或 <code>S4_GR_vs_G</code> 的 log2 fold change 為正且幅度合理；至少一個主要 contrast 的 <code>padj</code> 達到 0.05 或 0.10；<code>BGR_vs_B</code> 不明顯反向；與 MADS-like bait 有高共表現或 promoter 具有 CArG-like motif；功能註解也能合理連到 rostellum 發育。若某個基因 score 很高但 DESeq2 <code>padj</code> 不顯著，應先列為 qPCR 次優先驗證，而不是直接投入 VIGS 或 knockdown。</p>
-<h3>6. MADS-box 調控證據分成直接與間接兩種</h3><p><code>MADS corr</code> 代表候選基因和本地 MADS-like bait genes 在這批 RNA-seq 樣本中的共表現程度，屬於「可能在同一調控網路」的證據。<code>CArG</code> 代表 promoter 2 kb 內找到 MADS-box 常見結合 motif，屬於「可能被 MADS-box 直接調控」的弱證據。兩者都不能單獨證明直接調控；同時有 rostellum expression、DESeq2 支持、MADS co-expression 和 CArG motif 的基因，才值得後續用 qPCR、ChIP-qPCR 或 reporter assay 驗證。</p>
-</section>
-<section><h2>DESeq2-Style Differential Expression</h2>
-<p>這張表回答的是「每個比較裡，有多少基因達到正式差異表現標準」。它不是最後候選基因排名。<code>padj&lt;0.05</code> 或 <code>padj&lt;0.10</code> 代表在該 contrast 中有統計支持；<code>|LFC|&gt;=1 &amp; padj&lt;0.05</code> 則是同時要求變化幅度至少 2 倍且通過 FDR 校正。由於每組多為 n=3，dispersion 估計仍需保守解讀。</p>
-<div class="wrap"><table><thead><tr><th>Contrast</th><th>Genes tested</th><th>padj&lt;0.05</th><th>padj&lt;0.10</th><th>|LFC|&gt;=1 &amp; padj&lt;0.05</th><th>Up</th><th>Down</th><th>Top gene</th><th>Top padj</th><th>Top log2FC</th></tr></thead><tbody><tr><td>S3_GR_vs_G</td><td class="num">18,245</td><td class="num">2,174</td><td class="num">2,978</td><td class="num">1,582</td><td class="num">872</td><td class="num">710</td><td><code>VANPL_A_00012t010600</code></td><td class="num">1.09e-82</td><td class="num">-8.07</td></tr><tr><td>S4_GR_vs_G</td><td class="num">18,232</td><td class="num">117</td><td class="num">279</td><td class="num">73</td><td class="num">37</td><td class="num">36</td><td><code>VANPL_A_00011t003790</code></td><td class="num">5.57e-06</td><td class="num">-1.21</td></tr><tr><td>S1_BGR_vs_B</td><td class="num">18,413</td><td class="num">4,030</td><td class="num">4,778</td><td class="num">2,223</td><td class="num">743</td><td class="num">1,480</td><td><code>VANPL_A_00006t009530</code></td><td class="num">1.18e-156</td><td class="num">-3.88</td></tr><tr><td>S2_BGR_vs_B</td><td class="num">18,266</td><td class="num">578</td><td class="num">776</td><td class="num">564</td><td class="num">73</td><td class="num">491</td><td><code>VANPL_A_00001t027220</code></td><td class="num">9.35e-25</td><td class="num">11.63</td></tr><tr><td>S3_BGR_vs_B</td><td class="num">18,114</td><td class="num">406</td><td class="num">566</td><td class="num">382</td><td class="num">73</td><td class="num">309</td><td><code>VANPL_A_00004t007370</code></td><td class="num">1.34e-42</td><td class="num">-3.72</td></tr><tr><td>S4_BGR_vs_B</td><td class="num">17,356</td><td class="num">212</td><td class="num">332</td><td class="num">176</td><td class="num">149</td><td class="num">27</td><td><code>VANPL_A_00012t008160</code></td><td class="num">1.85e-10</td><td class="num">6.44</td></tr></tbody></table></div></section>
-<section><h2>Top qPCR Candidate Genes</h2><p><code>Score</code> 是候選優先度分數，不是統計 p-value；<code>S3 GR/G</code> 與 <code>S4 GR/G</code> 是 rostellum 主要比較的 log2 fold change；<code>S3 padj</code> 與 <code>S4 padj</code> 是對應 DESeq2-style 檢定的 FDR 校正結果。</p><div class="wrap"><table><thead><tr><th>Gene</th><th>Score</th><th>Rostellum index</th><th>S3 GR/G</th><th>S4 GR/G</th><th>S3 padj</th><th>S4 padj</th><th>Annotation</th></tr></thead><tbody><tr><td><code>VANPL_A_00001t017650</code></td><td class="num">19.00</td><td class="num">4.64</td><td class="num">6.20</td><td class="num">3.09</td><td class="num">0.008</td><td class="num">0.633</td><td>Sugar transport protein MST3</td></tr><tr><td><code>VANPL_A_00012t003490</code></td><td class="num">13.93</td><td class="num">3.56</td><td class="num">4.91</td><td class="num">2.21</td><td class="num">0.010</td><td class="num">0.816</td><td>Subtilisin-like protease 4</td></tr><tr><td><code>VANPL_A_00002t004950</code></td><td class="num">13.31</td><td class="num">2.49</td><td class="num">2.08</td><td class="num">2.89</td><td class="num">0.655</td><td class="num">0.483</td><td>LOB domain-containing protein 11-like</td></tr></tbody></table></div></section>
-<section><h2>Files</h2><p>Full local report with figures: <code>/mnt/d/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>. Full PyDESeq2 tables are in <code>/mnt/d/Vanilla/rostellum_target_analysis/cr0040a_only/deseq2/</code>.</p></section>
-</main></body></html>
+  <section>
+    <h2>Overview</h2>
+    <div class="grid">
+      <div class="card"><strong>38</strong>RNA-seq samples retained after QC</div>
+      <div class="card"><strong>26,392</strong>CR0040A genes ranked</div>
+      <div class="card"><strong>42</strong>Pfam-supported CR0040A MADS core genes</div>
+      <div class="card"><strong>50</strong>第一波 qPCR 驗證候選 genes</div>
+    </div>
+    <p>本分析使用 2025 MIKC<sup>C</sup>-type Vanilla rostellum 論文的公共 RNA-seq reads，重新 mapping 到 <code>CR0040_HaplotypeA</code>，再用目前專案可用的 count matrix 做 rostellum/MADS candidate prioritization。文章中的 HPP92/KAG 座標、WGCNA module 與 published candidates 不納入本階段 ranking，保留作後續獨立比較。</p>
+    <div class="note"><strong>核心策略：</strong>先用 DESeq2-style 統計找 rostellum 相關差異表現，再用 Pfam-defined MADS bait、MADS co-expression、OrchidBase7 predicted targets、promoter CArG motif 與功能註解縮小候選名單。</div>
+  </section>
+
+  <section>
+    <h2>Pages</h2>
+    <div class="links">
+      <div class="linkbox"><a href="discussion_summary.html">查看討論與修改紀錄</a><p>整理我們如何逐步修改分析邏輯、報告文字、MADS 定義、qPCR shortlist 與 target interpretation。</p></div>
+      <div class="linkbox"><a href="CR0040A_rostellum_experiment_logic_flowchart.md">實驗邏輯流程圖</a><p>Mermaid 文字版流程圖，說明從研究問題到 qPCR / VIGS 驗證的整體路徑。</p></div>
+      <div class="linkbox"><a href="CR0040A_rostellum_analysis_summary.md">Markdown summary</a><p>本地分析產生的摘要檔，保留 CR0040A-only rostellum candidate analysis 的主要結果。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Current Interpretation</h2>
+    <p>目前 CR0040A data 中最強的 local MADS regulator candidate 是 <code>VANPL_A_00001t031260</code>（SVP-like）。它的 local MADS bait score 最高，S3 <code>GR_vs_G</code> log2FC 為正且有統計支持，也有 OrchidBase7 predicted target overlap 可以往下游候選追。</p>
+    <p>這不是最終功能證明。下一步建議先做 qPCR 驗證 S3/S4 的 <code>G vs GR</code> 與 <code>B vs BGR</code>，再選擇 MADS 或下游 target 做 VIGS/RNAi/functional assay。</p>
+  </section>
+
+  <section>
+    <h2>Key Files</h2>
+    <table><thead><tr><th>File</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td><code>discussion_summary.html</code></td><td>討論與修改紀錄，已上傳。</td></tr>
+      <tr><td><code>CR0040A_rostellum_experiment_logic_flowchart.md</code></td><td>實驗邏輯 Mermaid 流程圖，已上傳。</td></tr>
+      <tr><td><code>CR0040A_rostellum_analysis_summary.md</code></td><td>CR0040A-only 分析摘要。</td></tr>
+    </tbody></table>
+    <p class="small">大型 raw reads、reference genome、完整本地中間檔與內嵌圖片版 HTML 未放入 GitHub。</p>
+  </section>
+</main>
+</body>
+</html>
