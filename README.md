@@ -1,26 +1,20 @@
-# Vanilla Rostellum MADS Target Analysis
+# CR0040A Vanilla Rostellum MADS Target Analysis
 
-This repository contains an HTML report for CR0040A-only *Vanilla planifolia* rostellum MADS-box target prioritization.
+This repository contains an HTML report for the CR0040A-only Vanilla rostellum
+MADS-box target prioritization analysis.
+
+Open `index.html` directly, or enable GitHub Pages for this repository and use
+the published Pages URL.
 
 Main report:
 
 - `index.html`
+- `discussion_summary.html`
+- `CR0040A_rostellum_experiment_logic_flowchart.md`
 
-View on GitHub:
+Supporting script:
 
-- https://github.com/ShaotingL/Vanilla/blob/main/index.html
+- `build_cr0040a_html_report.py`
 
-Render as HTML with htmlpreview:
-
-- https://htmlpreview.github.io/?https://github.com/ShaotingL/Vanilla/blob/main/index.html
-
-Notes:
-
-- RNA-seq preprocessing was based on `nf-core/rnaseq v3.21.0`; the default alignment/quantification mode is `--aligner star_salmon` (STAR alignment followed by Salmon quantification).
-- PyDESeq2 `0.5.4` was installed and used to run DESeq2-style Wald tests for `S3_GR_vs_G`, `S4_GR_vs_G`, and `S1-S4 BGR_vs_B` contrasts.
-- The current analysis uses the available project count matrix at `results/counts/PRJNA985237_CR0040A_raw_counts_20251114_012801.txt`.
-- I did not find a standard Salmon merged gene-count matrix such as `star_salmon/salmon.merged.gene_counts.tsv` under the current `results/` directory. If that file is located later, the ranking should be rerun from the Salmon matrix.
-- Article gene IDs, WGCNA modules, and published candidate results are held out from ranking; they should be compared only after the CR0040A analysis is complete.
-- This online report is a compact HTML version for browsing outside the local workstation.
-- Raw data, genome references, RNA-seq counts, and intermediate tables are not included.
-- The local full report with embedded PCA and heatmap images remains at `/mnt/d/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html`.
+Large raw data, genome reference files, RNA-seq counts, and intermediate tables
+are intentionally not included.
