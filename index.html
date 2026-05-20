@@ -5,68 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CR0040A Vanilla Rostellum MADS Target Analysis</title>
   <style>
-    :root{--ink:#17202a;--muted:#5d6673;--line:#d9dee6;--soft:#f5f7fa;--accent:#0f766e;--accent2:#7c3aed;--warn:#8a4b08;--warnbg:#fff7e6}
-    body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.65;background:#fff}
+    :root{--ink:#17202a;--muted:#5d6673;--line:#d9dee6;--soft:#f5f7fa;--accent:#0f766e;--accent2:#7c3aed}
+    body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.7;background:#fff}
     header{padding:46px min(7vw,72px) 34px;border-bottom:1px solid var(--line);background:#f7fbfa}
-    main{max-width:1080px;margin:0 auto;padding:30px 24px 70px}
-    h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:38px 0 14px;padding-top:18px;border-top:1px solid var(--line)}
-    .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.card{border:1px solid var(--line);border-radius:8px;background:var(--soft);padding:18px}.card strong{display:block;font-size:26px;color:var(--accent)}
-    .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}.warning{border-left:4px solid var(--warn);background:var(--warnbg);padding:14px 18px;margin:18px 0}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}.linkbox{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}.linkbox a{font-weight:700;color:var(--accent2);text-decoration:none}.linkbox a:hover{text-decoration:underline}
-    code{background:#eef1f5;padding:2px 5px;border-radius:4px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:#f2f5f8}.small{font-size:13px;color:var(--muted)}
+    main{max-width:980px;margin:0 auto;padding:28px 24px 70px}
+    h1{margin:0 0 12px;font-size:clamp(28px,4vw,42px);line-height:1.18}
+    h2{margin:36px 0 14px;padding-top:18px;border-top:1px solid var(--line);font-size:24px}
+    h3{margin:24px 0 8px;font-size:18px}.muted{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:20px 0}
+    .card{border:1px solid var(--line);border-radius:8px;background:var(--soft);padding:16px}.card strong{display:block;font-size:25px;color:var(--accent)}
+    .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}
+    .decision{border:1px solid #b9d9d4;background:#f4fbfa;border-radius:8px;padding:16px 18px;margin:18px 0}
+    code{background:#eef1f5;padding:2px 5px;border-radius:4px}.small{font-size:13px;color:var(--muted)}
+    a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+    ul{padding-left:22px}.compact li{margin:4px 0}
   </style>
 </head>
 <body>
 <header>
   <h1>CR0040A Vanilla Rostellum MADS Target Analysis</h1>
-  <p class="muted">這是 GitHub 入口頁。完整圖表版仍保留在本地 <code>D:/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>；GitHub 版提供外部瀏覽、討論紀錄與核心分析邏輯。</p>
+  <p class="muted">目的：利用公共 Vanilla rostellum RNA-seq reads，重新 mapping 到 <code>CR0040_HaplotypeA</code>，找出可能影響 rostellum 發育、適合後續 qPCR / VIGS / functional assay 的 MADS 與下游候選基因。</p>
 </header>
 <main>
   <section>
-    <h2>怎麼打開網頁版</h2>
-    <div class="warning"><strong>如果你是在 GitHub 的 <code>blob/main/index.html</code> 頁面看到 HTML 原始碼，這是 GitHub 的預設行為。</strong><br>請用下面的 rendered preview 連結，或啟用 GitHub Pages 後用正式網址開。</div>
-    <div class="links">
-      <div class="linkbox"><a href="https://htmlpreview.github.io/?https://github.com/ShaotingL/Vanilla/blob/main/index.html">開啟主報告預覽</a><p>用 htmlpreview 直接 render 目前 GitHub 上的 <code>index.html</code>。</p></div>
-      <div class="linkbox"><a href="https://htmlpreview.github.io/?https://github.com/ShaotingL/Vanilla/blob/main/discussion_summary.html">開啟討論紀錄預覽</a><p>用 htmlpreview render <code>discussion_summary.html</code>。</p></div>
-      <div class="linkbox"><a href="https://raw.githack.com/ShaotingL/Vanilla/main/index.html">raw.githack 主報告</a><p>另一個可直接顯示 HTML 的備用入口。</p></div>
-      <div class="linkbox"><a href="https://shaotingl.github.io/Vanilla/">GitHub Pages 網址</a><p>需要先在 repository Settings -> Pages 啟用 <code>main</code> / <code>root</code>。</p></div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Overview</h2>
+    <h2>目前結論</h2>
     <div class="grid">
-      <div class="card"><strong>38</strong>RNA-seq samples retained after QC</div>
+      <div class="card"><strong>38</strong>QC 後納入分析的 RNA-seq samples</div>
       <div class="card"><strong>26,392</strong>CR0040A genes ranked</div>
-      <div class="card"><strong>42</strong>Pfam-supported CR0040A MADS core genes</div>
+      <div class="card"><strong>42</strong>Pfam-supported MADS core genes</div>
       <div class="card"><strong>50</strong>第一波 qPCR 驗證候選 genes</div>
     </div>
-    <p>本分析使用 2025 MIKC<sup>C</sup>-type Vanilla rostellum 論文的公共 RNA-seq reads，重新 mapping 到 <code>CR0040_HaplotypeA</code>，再用目前專案可用的 count matrix 做 rostellum/MADS candidate prioritization。文章中的 HPP92/KAG 座標、WGCNA module 與 published candidates 不納入本階段 ranking，保留作後續獨立比較。</p>
-    <div class="note"><strong>核心策略：</strong>先用 DESeq2-style 統計找 rostellum 相關差異表現，再用 Pfam-defined MADS bait、MADS co-expression、OrchidBase7 predicted targets、promoter CArG motif 與功能註解縮小候選名單。</div>
-  </section>
-
-  <section>
-    <h2>Pages</h2>
-    <div class="links">
-      <div class="linkbox"><a href="discussion_summary.html">查看討論與修改紀錄</a><p>整理我們如何逐步修改分析邏輯、報告文字、MADS 定義、qPCR shortlist 與 target interpretation。</p></div>
-      <div class="linkbox"><a href="CR0040A_rostellum_experiment_logic_flowchart.md">實驗邏輯流程圖</a><p>Mermaid 文字版流程圖，說明從研究問題到 qPCR / VIGS 驗證的整體路徑。</p></div>
-      <div class="linkbox"><a href="CR0040A_rostellum_analysis_summary.md">Markdown summary</a><p>本地分析產生的摘要檔，保留 CR0040A-only rostellum candidate analysis 的主要結果。</p></div>
+    <div class="decision">
+      <strong>目前最值得優先追的 MADS candidate：</strong><code>VANPL_A_00001t031260</code>（SVP-like）。它在 CR0040A data 中的 local MADS bait score 最高，S3 <code>GR_vs_G</code> 表現上升且有統計支持，也有 OrchidBase7 predicted target overlap 可以往下游候選延伸。
     </div>
+    <p>這不是最終功能證明，而是候選排序。真正要回答「抑制 rostellum 生長是否能降低人工授粉成本」，下一步仍需要先用 qPCR 驗證候選基因的 stage/tissue 表現，再選 MADS 或下游 target 做 VIGS/RNAi/functional assay。</p>
   </section>
 
   <section>
-    <h2>Current Interpretation</h2>
-    <p>目前 CR0040A data 中最強的 local MADS regulator candidate 是 <code>VANPL_A_00001t031260</code>（SVP-like）。它的 local MADS bait score 最高，S3 <code>GR_vs_G</code> log2FC 為正且有統計支持，也有 OrchidBase7 predicted target overlap 可以往下游候選追。</p>
-    <p>這不是最終功能證明。下一步建議先做 qPCR 驗證 S3/S4 的 <code>G vs GR</code> 與 <code>B vs BGR</code>，再選擇 MADS 或下游 target 做 VIGS/RNAi/functional assay。</p>
+    <h2>分析邏輯</h2>
+    <h3>1. 先只使用我們自己的 CR0040A mapping 結果</h3>
+    <p>原論文的公共 reads 被重新 mapping 到 <code>CR0040_HaplotypeA</code>。文章中的 HPP92/KAG 座標、WGCNA module 與 published candidates 先不納入 ranking，避免把文章結果直接帶進我們的排序；等 CR0040A 分析完成後，再獨立比較。</p>
+
+    <h3>2. 用取樣設計定義 rostellum signal</h3>
+    <p><code>GR_vs_G</code> 是最接近 rostellum-specific 的比較，因為 <code>GR</code> 是含 rostellum 的蕊柱，<code>G</code> 是移除 rostellum 後的蕊柱。這個比較只在 S3/S4 有，因為原始取樣設計只有 S3/S4 同時具備 <code>GR</code> 與 <code>G</code>。</p>
+    <p><code>BGR_vs_B</code> 可以從 S1 到 S4 做，因為每個 stage 都有完整花蕾 <code>BGR</code> 與移除蕊柱/rostellum 後的花被組織 <code>B</code>；它提供較粗略的 tissue-level support。</p>
+
+    <h3>3. MADS 的定義採用 Pfam domain</h3>
+    <p>本階段用 CR0040A annotation browser / Pfam 註解篩 MADS：<code>PF00319</code>（SRF-type / MADS-box DNA-binding domain）與 <code>PF09047</code>（MEF2 domain）作為 MADS core。<code>PF01486</code>（K-box）只當作 MIKC-type supporting annotation，單獨只有 K-box 不算 MADS core。</p>
+
+    <h3>4. 最後用多個證據縮小候選</h3>
+    <ul class="compact">
+      <li>DESeq2-style differential expression：看 S3/S4 <code>GR_vs_G</code> 與 <code>BGR_vs_B</code> 是否支持。</li>
+      <li>MADS co-expression：看候選基因是否跟重要 MADS bait 同步變化。</li>
+      <li>OrchidBase7 predicted targets：看候選是否落在重要 MADS 的預測 target set。</li>
+      <li>Promoter CArG motif：作為可能被 MADS 直接調控的弱證據。</li>
+      <li>功能註解：優先看器官生長、細胞壁 remodeling、糖分供應或發育調控相關基因。</li>
+    </ul>
   </section>
 
   <section>
-    <h2>Key Files</h2>
-    <table><thead><tr><th>File</th><th>Meaning</th></tr></thead><tbody>
-      <tr><td><code>discussion_summary.html</code></td><td>討論與修改紀錄，已上傳。</td></tr>
-      <tr><td><code>CR0040A_rostellum_experiment_logic_flowchart.md</code></td><td>實驗邏輯 Mermaid 流程圖，已上傳。</td></tr>
-      <tr><td><code>CR0040A_rostellum_analysis_summary.md</code></td><td>CR0040A-only 分析摘要。</td></tr>
-    </tbody></table>
-    <p class="small">大型 raw reads、reference genome、完整本地中間檔與內嵌圖片版 HTML 未放入 GitHub。</p>
+    <h2>下一步實驗</h2>
+    <ul>
+      <li>先對 <code>VANPL_A_00001t031260</code> 與第一波 qPCR shortlist 做 S3/S4 tissue qPCR。</li>
+      <li>確認 <code>GR > G</code> 或 rostellum-associated pattern 是否重現。</li>
+      <li>從 qPCR 支持的 MADS / target 中挑 1-3 個做 VIGS/RNAi 或其他 knockdown assay。</li>
+      <li>觀察 rostellum 大小、形態、授粉操作時間與結實率，避免只看分子表現。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>補充資料</h2>
+    <p class="small">這個 GitHub Pages 首頁刻意簡化成單頁。完整圖表版仍在本地 <code>D:/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>。</p>
+    <ul class="compact small">
+      <li><a href="discussion_summary.html">討論與修改紀錄</a></li>
+      <li><a href="CR0040A_rostellum_experiment_logic_flowchart.md">實驗邏輯流程圖 Mermaid 原始檔</a></li>
+      <li><a href="CR0040A_rostellum_analysis_summary.md">CR0040A 分析摘要 Markdown</a></li>
+    </ul>
   </section>
 </main>
 </body>
