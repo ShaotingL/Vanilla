@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CR0040A Vanilla Rostellum MADS Target Analysis</title>
   <style>
-    :root{--ink:#17202a;--muted:#5d6673;--line:#d9dee6;--soft:#f5f7fa;--accent:#0f766e;--accent2:#7c3aed}
+    :root{--ink:#17202a;--muted:#5d6673;--line:#d9dee6;--soft:#f5f7fa;--accent:#0f766e;--accent2:#7c3aed;--warn:#8a4b08;--warnbg:#fff7e6}
     body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;line-height:1.65;background:#fff}
     header{padding:46px min(7vw,72px) 34px;border-bottom:1px solid var(--line);background:#f7fbfa}
     main{max-width:1080px;margin:0 auto;padding:30px 24px 70px}
     h1{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.18}h2{margin:38px 0 14px;padding-top:18px;border-top:1px solid var(--line)}
     .muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:22px 0}.card{border:1px solid var(--line);border-radius:8px;background:var(--soft);padding:18px}.card strong{display:block;font-size:26px;color:var(--accent)}
-    .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}.linkbox{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}.linkbox a{font-weight:700;color:var(--accent2);text-decoration:none}.linkbox a:hover{text-decoration:underline}
+    .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}.warning{border-left:4px solid var(--warn);background:var(--warnbg);padding:14px 18px;margin:18px 0}.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:18px 0}.linkbox{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}.linkbox a{font-weight:700;color:var(--accent2);text-decoration:none}.linkbox a:hover{text-decoration:underline}
     code{background:#eef1f5;padding:2px 5px;border-radius:4px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:#f2f5f8}.small{font-size:13px;color:var(--muted)}
   </style>
 </head>
@@ -21,6 +21,17 @@
   <p class="muted">這是 GitHub 入口頁。完整圖表版仍保留在本地 <code>D:/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>；GitHub 版提供外部瀏覽、討論紀錄與核心分析邏輯。</p>
 </header>
 <main>
+  <section>
+    <h2>怎麼打開網頁版</h2>
+    <div class="warning"><strong>如果你是在 GitHub 的 <code>blob/main/index.html</code> 頁面看到 HTML 原始碼，這是 GitHub 的預設行為。</strong><br>請用下面的 rendered preview 連結，或啟用 GitHub Pages 後用正式網址開。</div>
+    <div class="links">
+      <div class="linkbox"><a href="https://htmlpreview.github.io/?https://github.com/ShaotingL/Vanilla/blob/main/index.html">開啟主報告預覽</a><p>用 htmlpreview 直接 render 目前 GitHub 上的 <code>index.html</code>。</p></div>
+      <div class="linkbox"><a href="https://htmlpreview.github.io/?https://github.com/ShaotingL/Vanilla/blob/main/discussion_summary.html">開啟討論紀錄預覽</a><p>用 htmlpreview render <code>discussion_summary.html</code>。</p></div>
+      <div class="linkbox"><a href="https://raw.githack.com/ShaotingL/Vanilla/main/index.html">raw.githack 主報告</a><p>另一個可直接顯示 HTML 的備用入口。</p></div>
+      <div class="linkbox"><a href="https://shaotingl.github.io/Vanilla/">GitHub Pages 網址</a><p>需要先在 repository Settings -> Pages 啟用 <code>main</code> / <code>root</code>。</p></div>
+    </div>
+  </section>
+
   <section>
     <h2>Overview</h2>
     <div class="grid">
