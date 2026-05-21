@@ -16,6 +16,8 @@
     .card{border:1px solid var(--line);border-radius:8px;background:var(--soft);padding:16px}.card strong{display:block;font-size:25px;color:var(--accent)}
     .note{border-left:4px solid var(--accent);background:#eefaf7;padding:14px 18px;margin:18px 0}
     .decision{border:1px solid #b9d9d4;background:#f4fbfa;border-radius:8px;padding:16px 18px;margin:18px 0}
+    .report-link{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--accent);color:#fff;font-weight:700}
+    .report-link:hover{text-decoration:none;background:#115e59}
     code{background:#eef1f5;padding:2px 5px;border-radius:4px}.small{font-size:13px;color:var(--muted)}
     a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
     ul{padding-left:22px}.compact li{margin:4px 0}
@@ -39,6 +41,7 @@
       <strong>目前最值得優先追的 MADS candidate：</strong><code>VANPL_A_00001t031260</code>（SVP-like）。它在 CR0040A data 中的 local MADS bait score 最高，S3 <code>GR_vs_G</code> 表現上升且有統計支持，也有 OrchidBase7 predicted target overlap 可以往下游候選延伸。
     </div>
     <p>這不是最終功能證明，而是候選排序。真正要回答「抑制 rostellum 生長是否能降低人工授粉成本」，下一步仍需要先用 qPCR 驗證候選基因的 stage/tissue 表現，再選 MADS 或下游 target 做 VIGS/RNAi/functional assay。</p>
+    <p><a class="report-link" href="full_report.html">查看完整圖表報告</a></p>
   </section>
 
   <section>
@@ -75,7 +78,7 @@
 
   <section>
     <h2>補充資料</h2>
-    <p class="small">這個 GitHub Pages 首頁刻意簡化成單頁。完整圖表版仍在本地 <code>D:/Vanilla/rostellum_target_analysis/cr0040a_only/CR0040A_rostellum_MADS_target_report.html</code>。</p>
+    <p class="small">這個 GitHub Pages 首頁刻意簡化成單頁；完整圖表報告已另存為 <a href="full_report.html">full_report.html</a>。</p>
     <ul class="compact small">
       <li><a href="discussion_summary.html">討論與修改紀錄</a></li>
       <li><a href="CR0040A_rostellum_experiment_logic_flowchart.md">實驗邏輯流程圖 Mermaid 原始檔</a></li>
